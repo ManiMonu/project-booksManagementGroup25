@@ -4,6 +4,7 @@
   "description": "//",
   "main": "index.js",
   "scripts": {
+    "start": "npx nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/ManiMonu/project-booksManagementGroup25#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.3"
   }
 }

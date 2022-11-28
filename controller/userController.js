@@ -1,4 +1,5 @@
 const userModel = require("../model/userModel")
+const jwt = require('jsonwebtoken')
 
 const phoneRegex = /^[0]?[789]\d{9}$/
 const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
@@ -31,4 +32,33 @@ const createUser = async function (req, res) {
     res.send({ msg: newData })
 }
 
+
+const loginUser = async function(req, res){
+
+    try  { 
+       const { email, password } = req.body
+   
+       if(!Object.keys(req.body).length > 0){
+            return res.status(400).send({status: false, msg: "Please provide details for login"})};
+
+        if(!email){
+            return res.status(400).send({status: false, msg: "Provide email"})};
+        
+
+       if(!password){
+        return res.status(400).send({status: false, msg: "Provide password"})};
+
+    let savedData = await userModel.findOne({ email, password })
+    if(!savedData){
+       return res.status(404).send({status: false, message: "No such data"}) };
+
+   //--------create token ----------------------------------------------------------------------------------------------------------------
+    let encodeToken = jwt.sign({userId: savedData._id, iat: (new Date().getTime()/1000 + 60 * 60)}, "group25")
+      return res.status(200).send({status: true, message: 'Success', data: encodeToken})
+    }catch(error){
+       return res.status(500).send({status: false, msg: error.message})
+   }
+}
+
 module.exports.createUser = createUser
+module.exports.loginUser = loginUser
