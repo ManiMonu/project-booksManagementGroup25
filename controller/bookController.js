@@ -52,7 +52,7 @@ const getBooks = async function (req, res) {
     try {
 
         let requestBody = req.query
-        if (Object.keys(requestBody).length > 0) {
+        if (!Object.keys(requestBody).length > 0) {
             let bookDetails = await bookModel.find({ isDeleted: false }).sort({ title: 1 }).collation({ locale: "en" }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
             if (!bookDetails.length > 0) {
                 return res.status(404).send({ status: false, message: "no book found" })
