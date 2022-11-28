@@ -47,5 +47,36 @@ const createBook = async function (req, res) {
 }
 
 
+const getBooks = async function (req, res) {
+    try {
+
+        let requestBody = req.query
+        if (requestBody.subcategory === "") {
+            return res.status(400).send({ status: false, msg: "please enter a subcategory" })
+        }
+
+        if (requestBody.category === "") {
+            return res.status(400).send({ status: false, msg: "please enter a category" })
+        }
+        if (requestBody.userId === "") {
+            return res.status(400).send({ status: false, msg: "please enter user id" })
+        }
+
+        let getBooksDetails = await bookModel.find({ isDeleted: false, ...requestBody }).sort({title: 1}).collation({locale: "en"}).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
+
+        if (getBooksDetails.length == 0) {
+            return res.status(404).send({ status: false, msg: 'no book found' })
+        } else {
+            return res.status(200).send({ status: true, msg: "get data successfully", data: getBooksDetails })
+        }
+
+
+    } catch (error) {
+        return res.status(500).send({ status: false, msg: error.message })
+    }
+}
+
+
 
 module.exports.createBook = createBook
+module.exports.getBooks = getBooks
