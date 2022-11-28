@@ -1,6 +1,7 @@
 const { mongo, default: mongoose } = require("mongoose");
 const bookModel = require("../model/bookModel")
 const userModel = require("../model/userModel")
+const objectId = mongoose.isValidObjectId
 
 const nameRegex = /^[a-zA-Z ]+$/
 
@@ -51,23 +52,34 @@ const getBooks = async function (req, res) {
     try {
 
         let requestBody = req.query
+        if (Object.keys(requestBody).length > 0) {
+            let bookDetails = await bookModel.find({ isDeleted: false }).sort({ title: 1 }).collation({ locale: "en" }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
+            if (!bookDetails.length > 0) {
+                return res.status(404).send({ status: false, message: "no book found" })
+            }
+            return res.status(200).send({ status: true, message: 'Success', data: getBooksDetails })
+        }
+
         if (requestBody.subcategory === "") {
-            return res.status(400).send({ status: false, msg: "please enter a subcategory" })
+            return res.status(400).send({ status: false, message: "please enter a subcategory" })
         }
 
         if (requestBody.category === "") {
-            return res.status(400).send({ status: false, msg: "please enter a category" })
+            return res.status(400).send({ status: false, message: "please enter a category" })
         }
         if (requestBody.userId === "") {
-            return res.status(400).send({ status: false, msg: "please enter user id" })
+            return res.status(400).send({ status: false, message: "please enter user id" })
+        }
+        if (!objectId(requestBody.userId)) {
+            return res.status(400).send({ status: false, message: "UserId is invalid" })
         }
 
-        let getBooksDetails = await bookModel.find({ isDeleted: false, ...requestBody }).sort({title: 1}).collation({locale: "en"}).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
+        let getBooksDetails = await bookModel.find({ isDeleted: false, ...requestBody }).sort({ title: 1 }).collation({ locale: "en" }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
 
         if (getBooksDetails.length == 0) {
             return res.status(404).send({ status: false, msg: 'no book found' })
         } else {
-            return res.status(200).send({ status: true, msg: "get data successfully", data: getBooksDetails })
+            return res.status(200).send({ status: true, message: 'Success', data: getBooksDetails })
         }
 
 

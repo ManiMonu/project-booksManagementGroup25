@@ -9,6 +9,8 @@ router.post("/register", userConttroller.createUser)
 
 router.post("/login", userConttroller.loginUser)
 
-router.post("/books", middleware.authentication, bookController.createBook)
+router.post("/books", middleware.authentication, middleware.authentication, bookController.createBook)
+
+router.get("/books", middleware.authentication, bookController.getBooks)
 
 module.exports = router
