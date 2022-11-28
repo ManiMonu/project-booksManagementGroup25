@@ -11,8 +11,6 @@ const createUser = async function (req, res) {
     if (!title) return res.status(400).send({ status: false, message: "title is not present" })
     if(title != "Mr" && title != "Mrs" && title != "Miss") return res.status(400).send({status : false, message : "Title should be Mr, Mrs or Miss"})
 
-
-
     
     if (!name) return res.status(400).send({ status: false, message: "Name is not present" })
 
