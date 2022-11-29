@@ -119,14 +119,14 @@ const updateBook = async function (req, res) {
     try {
         let bookId = req.params.bookId;
 
-        if (!bookId) {
-            return res.status(400).send({ status: false, message: "please provide a bookId in params" })
-        };
+        // if (!bookId) {
+        //     return res.status(400).send({ status: false, message: "please provide a bookId in params" })
+        // };
 
-        let findbookId = await bookModel.findById(bookId)
-        if (!findbookId) {
-            return res.status(404).send({ status: false, msg: "bookId doesn't exists" })
-        }
+        // let findbookId = await bookModel.findById(bookId)
+        // if (!findbookId) {
+        //     return res.status(404).send({ status: false, msg: "bookId doesn't exists" })
+        // }
 
         let updatedata = req.body;
 
@@ -180,13 +180,14 @@ const updateBook = async function (req, res) {
 
 const deleteBookById = async function (req, res) {
     try {
-        let bookId = req.params.bookId
-        if (!objectId(bookId)) return res.status(400).send({ status: false, message: "book is is not valid" })
-        let isBookIdPresent = await bookModel.findOne({ _id: bookId })
-        if (!isBookIdPresent) return res.status(404).send({ status: false, message: "book Id is not exist" })
-        if (isBookIdPresent.isDeleted == true) return res.status(400).send({ status: false, msg: "Blog is already deleted." })
+        let userToBeMdified = req.userToBeMdified
+        // let bookId = req.params.bookId
+        // if (!objectId(bookId)) return res.status(400).send({ status: false, message: "book is is not valid" })
+        // let isBookIdPresent = await bookModel.findOne({ _id: bookId })
+        // if (!isBookIdPresent) return res.status(404).send({ status: false, message: "book Id is not exist" })
+        // if (isBookIdPresent.isDeleted == true) return res.status(400).send({ status: false, msg: "Blog is already deleted." })
 
-        await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true } })
+        await bookModel.findOneAndUpdate({ _id: userToBeMdified }, { $set: { isDeleted: true } })
         res.status(200).send({ status: true, message: "successfully deleted" })
     }
     catch (error) {
@@ -205,3 +206,4 @@ module.exports.createBook = createBook
 module.exports.getBooks = getBooks
 module.exports.getBooksById = getBooksById
 module.exports.updateBook = updateBook
+module.exports.deleteBookById = deleteBookById

@@ -9,14 +9,14 @@ router.post("/register", userConttroller.createUser)
 
 router.post("/login", userConttroller.loginUser)
 
-router.post("/books", middleware.authentication, bookController.createBook)
+router.post("/books", middleware.authentication, middleware.authorisationForBookCreation, bookController.createBook)
 
 router.get("/books", middleware.authentication, bookController.getBooks)
 
 router.get("/books/:bookId", middleware.authentication, bookController.getBooksById)
 
-router.delete("/books/:bookId", bookController.deleteBookById)
+router.put('/books/:bookId', middleware.authentication,middleware.authorisationForDeleteAndUpdate,bookController.updateBook)
 
-router.put('/books/:bookId',middleware.authentication,middleware.authorisation,bookController.updateBook)
+router.delete("/books/:bookId", middleware.authentication, middleware.authorisationForDeleteAndUpdate, bookController.deleteBookById)
 
 module.exports = router
