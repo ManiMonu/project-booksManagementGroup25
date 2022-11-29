@@ -117,7 +117,16 @@ return res.status(200).send({status: true, message: 'success', data: obj})
 
 
 
+const deleteBookById = async function (req, res) {
+    let bookId = req.params.bookId
+    if(!bookId) return res.send({message : "book Id not present"})
+    let isBookIdPresent = await bookModel.findOne({ _id: bookId })
+    if (!isBookIdPresent) return res.send({ message: "book Id is not exist" })
+    if (isBookIdPresent.isDeleted == true) return res.status(400).send({ status: false, msg: "Blog is already deleted." })
 
+    let newData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true } })
+    res.send({ message: "successfully deleted" })
+}
 
 
 
@@ -129,3 +138,4 @@ return res.status(200).send({status: true, message: 'success', data: obj})
 module.exports.createBook = createBook
 module.exports.getBooks = getBooks
 module.exports.getBooksById = getBooksById
+module.exports.deleteBookById = deleteBookById
