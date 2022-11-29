@@ -15,4 +15,6 @@ router.get("/books", middleware.authentication, bookController.getBooks)
 
 router.get("/books/:bookId", middleware.authentication, bookController.getBooksById)
 
+router.put('/books/:bookId',middleware.authentication,middleware.authorisation,bookController.updateBook)
+
 module.exports = router
