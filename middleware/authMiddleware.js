@@ -59,7 +59,7 @@ let decodedToken = req.decodedToken
     if(decodedToken !== userToBeMdified){
         return res.status(403).send({status: false, message: "You do not have access rights"})
     }
-    req.userToBeMdified = userToBeMdified
+    req.bookId = bookId
     next()
     }catch(error){
         return res.status(500).send({status: false, message: error.message})

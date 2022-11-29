@@ -180,9 +180,9 @@ const updateBook = async function (req, res) {
 
 const deleteBookById = async function (req, res) {
     try {
-        let userToBeMdified = req.userToBeMdified
+        let bookId = req.bookId
 
-        await bookModel.findOneAndUpdate({ _id: userToBeMdified }, { $set: { isDeleted: true } })
+        await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { isDeleted: true } })
         res.status(200).send({ status: true, message: "successfully deleted" })
     }
     catch (error) {
