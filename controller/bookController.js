@@ -133,75 +133,16 @@ const updateBook = async function (req, res) {
         let { title, excerpt, ISBN, releasedAt } = updatedata;
 
         const dateFormate = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
-  
-        if(releasedAt){  
+
+        if (releasedAt) {
             if (!releasedAt.match(dateFormate)) {
                 return res.status(400).send({ status: false, msg: "Invalid format of date :- YYYY-MM-DD" })
             }
-            }
-
-       /* if (!isVAlidRequestBody(updatedata)) {
-            return res.status(400).send({ status: false, msg: "please input Book Details" })
-        };*/
-
-        let checkTitle = await bookModel.findOne({ title: title })
-        if (checkTitle) {
-            return res.status(400).send({ status: false, msg: "title must be unique" })
         }
 
-        let checkISBN = await bookModel.findOne({ ISBN: ISBN })
-        if (checkISBN) {
-            return res.status(400).send({ status: false, msg: "ISBN must be unique" })
-        }
-
-        let availabId = await bookModel.findOne({ _id: bookId, isDeleted: false });
-        if (!availabId) {
-            return res.status(404).send({ status: false, msg: "bookId is not present in db" })
-        }
-
-        let bookupdate = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },
-            { $set: { title: title, excerpt: excerpt, ISBN: ISBN, releasedAt: releasedAt } },
-            { new: true });
-
-        return res.status(200).send({ status: true, message: 'Success', data: bookupdate });
-
-
-    } catch (error) {
-        return res.status(500).send(error.message)
-    }
-
-}
-
-//--------------------------|| UPDATE BOOKS ||--------------------------------
-
-const updateBook = async function (req, res) {
-    try {
-        let bookId = req.params.bookId;
-
-        if (!bookId) {
-            return res.status(400).send({ status: false, message: "please provide a bookId in params" })
-        };
-
-        let findbookId = await bookModel.findById(bookId)
-        if (!findbookId) {
-            return res.status(404).send({ status: false, msg: "bookId doesn't exists" })
-        }
-
-        let updatedata = req.body;
-
-        let { title, excerpt, ISBN, releasedAt } = updatedata;
-
-        const dateFormate = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
-  
-        if(releasedAt){  
-            if (!releasedAt.match(dateFormate)) {
-                return res.status(400).send({ status: false, msg: "Invalid format of date :- YYYY-MM-DD" })
-            }
-            }
-
-       /* if (!isVAlidRequestBody(updatedata)) {
-            return res.status(400).send({ status: false, msg: "please input Book Details" })
-        };*/
+        /* if (!isVAlidRequestBody(updatedata)) {
+             return res.status(400).send({ status: false, msg: "please input Book Details" })
+         };*/
 
         let checkTitle = await bookModel.findOne({ title: title })
         if (checkTitle) {
