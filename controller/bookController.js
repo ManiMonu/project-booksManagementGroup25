@@ -10,7 +10,8 @@ const nameRegex = /^[a-zA-Z ]+$/
 const createBook = async function (req, res) {
     try {
         let data = req.body
-        let { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = data;
+        let userId = req.userLoggedIn
+        let { title, excerpt, ISBN, category, subcategory, releasedAt } = data;
 
         if (!title) return res.status(400).send({ status: false, message: "Title is not present" })
         if (!title.match(nameRegex)) return res.status(400).send({ status: false, message: "title is not valid" })
@@ -20,9 +21,9 @@ const createBook = async function (req, res) {
         if (!excerpt) return res.status(400).send({ status: false, message: "excerpt is not present" })
         if (!excerpt.match(nameRegex)) return res.status(400).send({ status: false, message: "excerpt is not valid" })
 
-        if (!userId) return res.status(400).send({ status: false, message: "userId is not present" })
+        // if (!userId) return res.status(400).send({ status: false, message: "userId is not present" })
         const isUserIdPresent = await userModel.findById(userId)
-        if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(400).send({ status: false, message: "userId not valid" })
+        // if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(400).send({ status: false, message: "userId not valid" })
         if (!isUserIdPresent) return res.status(400).send({ status: false, message: "user Id not exist" })
 
         if (!ISBN) return res.status(400).send({ status: false, message: "ISBN is not present" })

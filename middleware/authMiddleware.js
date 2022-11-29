@@ -25,7 +25,11 @@ const authorisation = function(req, res, next){
 try{
 const decodedToken = req.decodedToken
 let userLoggedIn = req.body.userId 
-if(!objectId(userId)){
+
+if(!userLoggedIn){
+    return res.status(400).send({status: false, message: "UserId is not present"})
+}
+if(!objectId(userLoggedIn)){
     return res.status(400).send({status: false, message: "Invalid UserId"})
 }
 if(decodedToken !== userLoggedIn){
