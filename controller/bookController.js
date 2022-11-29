@@ -90,5 +90,41 @@ const getBooks = async function (req, res) {
 
 
 
+const getBooksById = async function(req, res){
+try{
+let bookId = req.params.bookId
+if(!bookId){
+    return res.status(400).send({status: false, message: "BookId is required"})
+}
+if(!objectId(bookId)){
+    return res.status(400).send({status: false, message: "BookId is required"})
+}
+let savedData = await bookModel.findById(bookId)
+if(!savedData){
+    return res.status(404).send({status: false, message: 'No books found'})
+}
+
+let obj = {reviews: savedData.reviews, createdAt: savedData.createdAt, updatedAt: savedData.updatedAt, _id: savedData._id, title: savedData.title, excerpt: savedData.excerpt, userId:savedData.userId, category: savedData.category, subcategory: savedData.subcategory, isDeleted: savedData.isDeleted, releasedAt: savedData.releasedAt, reviewsData: [] }
+return res.status(200).send({status: true, message: 'success', data: obj})
+
+}catch(error){
+    return res.status(500).send({status: false, message: error.message})
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports.createBook = createBook
 module.exports.getBooks = getBooks
+module.exports.getBooksById = getBooksById

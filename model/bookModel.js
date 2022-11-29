@@ -30,7 +30,7 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    review: {
+    reviews: {
         type: Number,
         default: 0
     },
