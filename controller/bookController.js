@@ -117,18 +117,10 @@ const getBooksById = async function (req, res) {
 
 const updateBook = async function (req, res) {
     try {
-        let bookId = req.params.bookId;
-
-        // if (!bookId) {
-        //     return res.status(400).send({ status: false, message: "please provide a bookId in params" })
-        // };
-
-        // let findbookId = await bookModel.findById(bookId)
-        // if (!findbookId) {
-        //     return res.status(404).send({ status: false, msg: "bookId doesn't exists" })
-        // }
+        let bookId = req.bookId
 
         let updatedata = req.body;
+        if(!Object.keys(updatedata).length > 0) return res.status(400).send({status: false, message: 'Enter input for updation'})
 
         let { title, excerpt, ISBN, releasedAt } = updatedata;
 
@@ -183,10 +175,10 @@ const deleteBookById = async function (req, res) {
         let bookId = req.bookId
 
         await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { isDeleted: true } })
-        res.status(200).send({ status: true, message: "successfully deleted" })
+       return res.status(200).send({ status: true, message: "successfully deleted" })
     }
     catch (error) {
-        res.status(500).send({ status: false, message: error.message })
+      return res.status(500).send({ status: false, message: error.message })
     }
 }
 
