@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const phoneRegex = /^[0]?[789]\d{9}$/
 const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+const nameRegex = /^[a-zA-Z ]+$/
 
 
 const createUser = async function (req, res) {
@@ -15,6 +16,7 @@ const createUser = async function (req, res) {
 
 
     if (!name) return res.status(400).send({ status: false, message: "Name is not present" })
+    if(!name.match(nameRegex)) return res.status(400).send({status : false, message : "name is not valid"})
 
     if (!phone) return res.status(400).send({ status: false, message: "Phone is not present" })
     const isPhonePresent = await userModel.findOne({ phone: phone })
@@ -27,6 +29,10 @@ const createUser = async function (req, res) {
     if (!email.match(emailRegex)) return res.status(400).send({ status: false, message: "email is not valid" })
 
     if (!password) return res.status(400).send({ status: false, message: "Password is not present" })
+    if (Object.keys(password).length > 7  && Object.keys(password).length < 16) return res.status(400).send({ status: false, message: "password is not valid" })
+
+    // if (password.length < 7   && password.length > 16) return res.status(400).send({ status: false, message: "password is not valid" })
+
 
     let newData = await userModel.create(data)
     return res.status(201).send({status : true, message: "User Data successfully created", data : newData })
