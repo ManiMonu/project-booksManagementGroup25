@@ -91,26 +91,26 @@ const getBooks = async function (req, res) {
 
 
 
-const getBooksById = async function(req, res){
-try{
-let bookId = req.params.bookId
-if(!bookId){
-    return res.status(400).send({status: false, message: "BookId is required"})
-}
-if(!objectId(bookId)){
-    return res.status(400).send({status: false, message: "BookId is required"})
-}
-let savedData = await bookModel.findById(bookId)
-if(!savedData){
-    return res.status(404).send({status: false, message: 'No books found'})
-}
+const getBooksById = async function (req, res) {
+    try {
+        let bookId = req.params.bookId
+        if (!bookId) {
+            return res.status(400).send({ status: false, message: "BookId is required" })
+        }
+        if (!objectId(bookId)) {
+            return res.status(400).send({ status: false, message: "BookId is required" })
+        }
+        let savedData = await bookModel.findById(bookId)
+        if (!savedData) {
+            return res.status(404).send({ status: false, message: 'No books found' })
+        }
 
-let obj = {reviews: savedData.reviews, createdAt: savedData.createdAt, updatedAt: savedData.updatedAt, _id: savedData._id, title: savedData.title, excerpt: savedData.excerpt, userId:savedData.userId, category: savedData.category, subcategory: savedData.subcategory, isDeleted: savedData.isDeleted, releasedAt: savedData.releasedAt, reviewsData: [] }
-return res.status(200).send({status: true, message: 'success', data: obj})
+        let obj = { reviews: savedData.reviews, createdAt: savedData.createdAt, updatedAt: savedData.updatedAt, _id: savedData._id, title: savedData.title, excerpt: savedData.excerpt, userId: savedData.userId, category: savedData.category, subcategory: savedData.subcategory, isDeleted: savedData.isDeleted, releasedAt: savedData.releasedAt, reviewsData: [] }
+        return res.status(200).send({ status: true, message: 'success', data: obj })
 
-}catch(error){
-    return res.status(500).send({status: false, message: error.message})
-}
+    } catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
+    }
 }
 
 
@@ -118,14 +118,19 @@ return res.status(200).send({status: true, message: 'success', data: obj})
 
 
 const deleteBookById = async function (req, res) {
-    let bookId = req.params.bookId
-    if(!bookId) return res.send({message : "book Id not present"})
-    let isBookIdPresent = await bookModel.findOne({ _id: bookId })
-    if (!isBookIdPresent) return res.send({ message: "book Id is not exist" })
-    if (isBookIdPresent.isDeleted == true) return res.status(400).send({ status: false, msg: "Blog is already deleted." })
+    try {
+        let bookId = req.params.bookId
+        if (!objectId(bookId)) return res.status(400).send({ status: false, message: "book is is not valid" })
+        let isBookIdPresent = await bookModel.findOne({ _id: bookId })
+        if (!isBookIdPresent) return res.status(404).send({ status: false, message: "book Id is not exist" })
+        if (isBookIdPresent.isDeleted == true) return res.status(400).send({ status: false, msg: "Blog is already deleted." })
 
-    let newData = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true } })
-    res.send({ message: "successfully deleted" })
+        await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true } })
+        res.status(200).send({ status: true, message: "successfully deleted" })
+    }
+    catch (error) {
+        res.status(500).send({ status: false, message: error.message })
+    }
 }
 
 
