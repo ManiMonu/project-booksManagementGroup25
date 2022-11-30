@@ -23,5 +23,7 @@ router.post("/books/:bookId/review", reviewController.reviewBook)
 
 router.put("/books/:bookId/review/:reviewId", reviewController.updateReview)
 
+router.put("/books/:bookId/review/:reviewId", reviewController.deleteReview)
+
 
 module.exports = router
