@@ -69,14 +69,11 @@ const loginUser = async function (req, res) {
         };
 
         //--------create token ----------------------------------------------------------------------------------------------------------------
-        // let encodeToken = jwt.sign({ 
-        //     userId: savedData._id,
-        //     exp: Math.floor(Date.now() / 1000) + 60,
-        //     iat: Math.floor(Date.now() / 1000)},
-        //      "group25")
-
-        let encodeToken =  jwt.sign({
-            userId: savedData._id}, 'group25', { expiresIn: '1m' })
+        let encodeToken = jwt.sign({ 
+            userId: savedData._id,
+            exp: Math.floor(Date.now() / 1000) + 60*60,
+            iat: Math.floor(Date.now() / 1000)},
+             "group25")
         return res.status(200).send({ status: true, message: 'Success', data: encodeToken })
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
