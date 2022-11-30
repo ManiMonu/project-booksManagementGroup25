@@ -1,5 +1,6 @@
 const { mongo, default: mongoose } = require("mongoose");
-const bookModel = require("../model/bookModel")
+const bookModel = require("../model/bookModel");
+const reviewModel = require("../model/reviewModel");
 const userModel = require("../model/userModel")
 const objectId = mongoose.isValidObjectId
 
@@ -105,8 +106,9 @@ const getBooksById = async function (req, res) {
             return res.status(404).send({ status: false, message: 'No books found' })
         }
     
+let reviewData = await reviewModel.find({bookId: savedData._id})
 
-        let obj = { reviews: savedData.reviews, createdAt: savedData.createdAt, updatedAt: savedData.updatedAt, _id: savedData._id, title: savedData.title, excerpt: savedData.excerpt, userId: savedData.userId, category: savedData.category, subcategory: savedData.subcategory, isDeleted: savedData.isDeleted, releasedAt: savedData.releasedAt, reviewsData: [] }
+        let obj = { reviews: savedData.reviews, createdAt: savedData.createdAt, updatedAt: savedData.updatedAt, _id: savedData._id, title: savedData.title, excerpt: savedData.excerpt, userId: savedData.userId, category: savedData.category, subcategory: savedData.subcategory, isDeleted: savedData.isDeleted, releasedAt: savedData.releasedAt, reviewsData: reviewData }
         return res.status(200).send({ status: true, message: 'success', data: obj })
 
     } catch (error) {

@@ -21,5 +21,7 @@ router.delete("/books/:bookId", middleware.authentication, middleware.authorisat
 
 router.post("/books/:bookId/review", reviewController.reviewBook)
 
+router.put("/books/:bookId/review/:reviewId", reviewController.updateReview)
+
 
 module.exports = router
