@@ -3,7 +3,7 @@ const router = express.Router();
 const userConttroller = require("../controller/userController")
 const bookController = require("../controller/bookController")
 const middleware = require("../middleware/authMiddleware")
-
+const reviewController = require('../controller/reviewController')
 
 router.post("/register", userConttroller.createUser)
 
@@ -19,6 +19,7 @@ router.put('/books/:bookId', middleware.authentication, middleware.authorisation
 
 router.delete("/books/:bookId", middleware.authentication, middleware.authorisationForDeleteAndUpdate, bookController.deleteBookById)
 
+router.post("/books/:bookId/review", reviewController.reviewBook)
 
 
 module.exports = router

@@ -104,6 +104,7 @@ const getBooksById = async function (req, res) {
         if (!savedData) {
             return res.status(404).send({ status: false, message: 'No books found' })
         }
+    
 
         let obj = { reviews: savedData.reviews, createdAt: savedData.createdAt, updatedAt: savedData.updatedAt, _id: savedData._id, title: savedData.title, excerpt: savedData.excerpt, userId: savedData.userId, category: savedData.category, subcategory: savedData.subcategory, isDeleted: savedData.isDeleted, releasedAt: savedData.releasedAt, reviewsData: [] }
         return res.status(200).send({ status: true, message: 'success', data: obj })
