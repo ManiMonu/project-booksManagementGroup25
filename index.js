@@ -17,6 +17,6 @@ app.use( (req ,res) => {
     res.status(404).send({status : false , message :`Page Not Found , Given URL ${req.url} is incorrect for this application.`})
 })
 
-app.listen(process.env.PORT || 3000, function () {
-    console.log('Express app running on port ' + (process.env.PORT || 3000))
+app.listen(3000, function () {
+    console.log('Express app running on port ' + 3000)
 });

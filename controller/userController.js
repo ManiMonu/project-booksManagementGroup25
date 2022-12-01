@@ -1,40 +1,48 @@
 const userModel = require("../model/userModel")
 const jwt = require('jsonwebtoken')
+const validator = require('../validator/validator')
 
-const phoneRegex = /^[0]?[789]\d{9}$/
-const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-const nameRegex = /^[a-zA-Z ]+$/
+// const phoneRegex = /^[0]?[789]\d{9}$/
+// const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+// const nameRegex = /^[a-zA-Z ]+$/
 
 
 const createUser = async function (req, res) {
     try{
 
     let data = req.body;
-    if(Object.keys(data).length === 0) return res.status(400).send({status: false, message: 'Input is required'})
-    let { title, name, phone, email, password } = data;
+    if(!validator.requiredInput(data)) return res.status(400).send({status: false, message: 'Input is required'})
+    let { title, name, phone, email, password, address} = data;
 
-    if (!title) return res.status(400).send({ status: false, message: "title is not present" })
-    if (title != "Mr" && title != "Mrs" && title != "Miss") return res.status(400).send({ status: false, message: "Title should be Mr, Mrs or Miss" })
+    if (!validator.validInput(title)) return res.status(400).send({ status: false, message: "title is not present" })
+    if (!["Mr","Mrs","Miss"].includes(title)) return res.status(400).send({ status: false, message: "Title should be Mr, Mrs or Miss" })
 
 
-    if (!name) return res.status(400).send({ status: false, message: "Name is not present" })
-    if(!name.match(nameRegex)) return res.status(400).send({status : false, message : "name is not valid"})
+    if (!validator.validInput(name)) return res.status(400).send({ status: false, message: "Name is not present" })
+    if(!validator.validString(name)) return res.status(400).send({status : false, message : "name is not valid"})
 
-    if (!phone) return res.status(400).send({ status: false, message: "Phone is not present" })
+    if (!validator.validInput(phone)) return res.status(400).send({ status: false, message: "Phone is not present" })
+    if (!validator.validPhone(phone)) return res.status(400).send({ status: false, message: "phone no is not valid" })
     const isPhonePresent = await userModel.findOne({ phone: phone })
     if (isPhonePresent) return res.status(400).send({ status: false, message: "Phone No is already exist" })
-    if (!phone.match(phoneRegex)) return res.status(400).send({ status: false, message: "phone no is not valid" })
 
-    if (!email) return res.status(400).send({ status: false, message: "email is not present" })
+    if (!validator.validInput(email)) return res.status(400).send({ status: false, message: "email is not present" })
+    if (!validator.validEmail(email)) return res.status(400).send({ status: false, message: "email is not valid" })
     const isEmailPresent = await userModel.findOne({ email: email })
     if (isEmailPresent) return res.status(400).send({ status: false, message: "email is already exist" })
-    if (!email.match(emailRegex)) return res.status(400).send({ status: false, message: "email is not valid" })
+   
 
-    if (!password) return res.status(400).send({ status: false, message: "Password is not present" })
-    if (Object.keys(password).length > 7  && Object.keys(password).length < 16) return res.status(400).send({ status: false, message: "password is not valid" })
-
-    // if (password.length < 7   && password.length > 16) return res.status(400).send({ status: false, message: "password is not valid" })
-
+    if (!validator.validInput(password)) return res.status(400).send({ status: false, message: "Password is not present" })
+    if (!validator.validPassword(password)) return res.status(400).send({ status: false, message: "password is not valid" })
+if(address.street){
+    if(!validator.validInput(address.street)) return res.status(400).send({status: false, message: 'Street is not valid'})
+}
+if(address.city){
+    if(!validator.validInput(address.city)) return res.status(400).send({status: false, message: 'City is not valid'})
+}
+if(address.pincode){
+    if(!validator.validInput(address.pincode)) return res.status(400).send({status: false, message: 'Pincode is not valid'})
+}
 
     let newData = await userModel.create(data)
     return res.status(201).send({status : true, message: "User Data successfully created", data : newData })
@@ -50,17 +58,17 @@ const loginUser = async function (req, res) {
     try {
         const { email, password } = req.body
 
-        if (!Object.keys(req.body).length > 0) {
-            return res.status(400).send({ status: false, msg: "Please provide details for login" })
+        if (!validator.requiredInput(req.body)) {
+            return res.status(400).send({ status: false, message: "Please provide details for login" })
         };
 
-        if (!email) {
-            return res.status(400).send({ status: false, msg: "Provide email" })
+        if (!validator.validInput(email)) {
+            return res.status(400).send({ status: false, message: "Provide email" })
         };
 
 
-        if (!password) {
-            return res.status(400).send({ status: false, msg: "Provide password" })
+        if (!validator.validInput(password)) {
+            return res.status(400).send({ status: false, message: "Provide password" })
         };
 
         let savedData = await userModel.findOne({ email, password })
