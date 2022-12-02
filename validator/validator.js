@@ -11,7 +11,7 @@ const validInput = function(value){
 
 const validNumber = function(value){
     if(typeof value === 'undefined' || value === null) return false
-    if(typeof value !== 'Number') return false
+    if(typeof value === "Number") return false
     return true
 }
 
