@@ -33,10 +33,10 @@ const createBook = async function (req, res) {
         if (isISBNPresent) return res.status(400).send({ status: false, message: "ISBN is already exist" })
 
         if (!category) return res.status(400).send({ status: false, message: "category is not present" })
-        if (!category.match(nameRegex)) return res.status(400).send({ status: false, message: "category is not valid" })
+        if (!validator.validString(category)) return res.status(400).send({ status: false, message: "category is not valid" })
 
         if (!subcategory) return res.status(400).send({ status: false, message: "subcategory is not present" })
-        if (!subcategory.match(nameRegex)) return res.status(400).send({ status: false, message: "subcategory is not valid" })
+        if (!validator.validString(subcategory)) return res.status(400).send({ status: false, message: "subcategory is not valid" })
 
         if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt is not present" })
 

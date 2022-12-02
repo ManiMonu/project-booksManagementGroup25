@@ -24,7 +24,7 @@ const validEmail = function(value){
 }
 
 const validPassword = function(value){
-    return value.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/)
+    return value.match(/^[A-Za-z]{8,15}$/)
 }
 
 const validPhone = function(value){
