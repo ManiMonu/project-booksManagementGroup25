@@ -9,7 +9,7 @@ router.post("/register", userConttroller.createUser)
 
 router.post("/login", userConttroller.loginUser)
 
-router.post("/books", middleware.authentication, middleware.authorisationForBookCreation, bookController.createBook)
+router.post("/books", middleware.authentication, bookController.createBook)
 
 router.get("/books", middleware.authentication, bookController.getBooks)
 
@@ -19,11 +19,15 @@ router.put('/books/:bookId', middleware.authentication, middleware.authorisation
 
 router.delete("/books/:bookId", middleware.authentication, middleware.authorisationForDeleteAndUpdate, bookController.deleteBookById)
 
-router.post("/books/:bookId/review", reviewController.reviewBook)
+router.post("/books/:bookId/review", reviewController.createReview)
 
 router.put("/books/:bookId/review/:reviewId", reviewController.updateReview)
 
 router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReview)
+
+router.all('/*', function(req, res){
+    return res.status(400).send({status: false, message: "path not found"})
+})
 
 
 module.exports = router

@@ -3,7 +3,7 @@ const requiredInput = function(requestBody){
 }
 
 const validInput = function(value){
-    if(typeof value === 'undefined' || value === null) return false
+   if(typeof value === 'undefined' || value === null) return false
     if(typeof value === 'string' && value.trim().length === 0) return false
     if(typeof value !== 'string') return false
     return true
@@ -20,7 +20,7 @@ const validString = function(value){
 }
 
 const validEmail = function(value){
-    return value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)
+    return value.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z-]+\.[a-zA-Z-.]+$/)
 }
 
 const validPassword = function(value){
@@ -34,13 +34,5 @@ const validPhone = function(value){
 const validISBN = function(value){
     return value.match(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
 }
-
-
-
-
-
-
-
-
 
 module.exports = { requiredInput, validInput, validString, validEmail, validPassword, validPhone, validISBN, validNumber }

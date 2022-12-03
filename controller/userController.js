@@ -2,11 +2,7 @@ const userModel = require("../model/userModel")
 const jwt = require('jsonwebtoken')
 const validator = require('../validator/validator')
 
-// const phoneRegex = /^[0]?[789]\d{9}$/
-// const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-// const nameRegex = /^[a-zA-Z ]+$/
-
-
+//--------------------------|| CREATE USER ||--------------------------------
 const createUser = async function (req, res) {
     try {
 
@@ -14,43 +10,47 @@ const createUser = async function (req, res) {
         if (!validator.requiredInput(data)) return res.status(400).send({ status: false, message: 'Input is required' })
         let { title, name, phone, email, password, address } = data;
 
-        if (!validator.validInput(title)) return res.status(400).send({ status: false, message: "title is not present" })
+        if (!validator.validInput(title)) return res.status(400).send({ status: false, message: "title is not present or valid" })
         if (!["Mr", "Mrs", "Miss"].includes(title)) return res.status(400).send({ status: false, message: "Title should be Mr, Mrs or Miss" })
 
 
-        if (!validator.validInput(name)) return res.status(400).send({ status: false, message: "Name is not present" })
+        if (!validator.validInput(name)) return res.status(400).send({ status: false, message: "Name is not present or valid" })
         if (!validator.validString(name)) return res.status(400).send({ status: false, message: "name is not valid" })
 
-        if (!validator.validInput(phone)) return res.status(400).send({ status: false, message: "Phone is not present" })
+        if (!validator.validInput(phone)) return res.status(400).send({ status: false, message: "Phone is not present or valid" })
         if (!validator.validPhone(phone)) return res.status(400).send({ status: false, message: "phone no is not valid" })
         const isPhonePresent = await userModel.findOne({ phone: phone })
-        if (isPhonePresent) return res.status(400).send({ status: false, message: "Phone No is already exist" })
+        if (isPhonePresent) return res.status(400).send({ status: false, message: "Phone No already exist" })
 
-        if (!validator.validInput(email)) return res.status(400).send({ status: false, message: "email is not present" })
+        if (!validator.validInput(email)) return res.status(400).send({ status: false, message: "email is not present or valid" })
         if (!validator.validEmail(email)) return res.status(400).send({ status: false, message: "email is not valid" })
         const isEmailPresent = await userModel.findOne({ email: email })
-        if (isEmailPresent) return res.status(400).send({ status: false, message: "email is already exist" })
+        if (isEmailPresent) return res.status(400).send({ status: false, message: "email already exist" })
 
 
-        if (!validator.validInput(password)) return res.status(400).send({ status: false, message: "Password is not present" })
-        if (!validator.validPassword(password)) return res.status(400).send({ status: false, message: "password is not valid" })
-        if (address.street) {
-            if (!validator.validInput(address.street)) return res.status(400).send({ status: false, message: 'Street is not valid' })
-        }
-        if (address.city) {
-            if (!validator.validInput(address.city)) return res.status(400).send({ status: false, message: 'City is not valid' })
-        }
-        if (address.pincode) {
-            if (!validator.validInput(address.pincode)) return res.status(400).send({ status: false, message: 'Pincode is not valid' })
+        if (!validator.validInput(password)) return res.status(400).send({ status: false, message: "Password is not present or valid" })
+        if (!validator.validPassword(password)) return res.status(400).send({ status: false, message: "password should be string, the length should be 8-15 characters" })
+        if (address) {
+            if (address.street) {
+                if (typeof address.street !== 'string' || address.street.trim().length === 0 || !address.street.match(/^[a-zA-Z ]+$/)) return res.status(400).send({ status: false, message: 'Street is not valid' })
+            }
+            if (address.city) {
+                if (typeof address.city !== 'string' || address.city.trim().length === 0 || !address.city.match(/^[a-zA-Z ]+$/)) return res.status(400).send({ status: false, message: 'City is not valid' })
+            }
+            if (address.pincode) {
+                if (typeof address.pincode !== 'string' || address.pincode.trim().length === 0 || !address.pincode.match(/^[\d]{6}$/)) return res.status(400).send({ status: false, message: 'Pincode is not valid' })
+            }
         }
 
         let newData = await userModel.create(data)
-        return res.status(201).send({ status: true, message: "User Data successfully created", data: newData })
+        return res.status(201).send({ status: true, message: 'Success', data: newData })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
+
+//--------------------------|| LOGIN USER ||--------------------------------
 
 
 const loginUser = async function (req, res) {
@@ -63,12 +63,12 @@ const loginUser = async function (req, res) {
         };
 
         if (!validator.validInput(email)) {
-            return res.status(400).send({ status: false, message: "Provide email" })
+            return res.status(400).send({ status: false, message: "email is not present or valid" })
         };
 
 
         if (!validator.validInput(password)) {
-            return res.status(400).send({ status: false, message: "Provide password" })
+            return res.status(400).send({ status: false, message: "password is not present or valid" })
         };
 
         let savedData = await userModel.findOne({ email, password })
@@ -79,11 +79,11 @@ const loginUser = async function (req, res) {
         //--------create token ----------------------------------------------------------------------------------------------------------------
         let encodeToken = jwt.sign({
             userId: savedData._id,
-            exp: Math.floor(Date.now() / 1000) + 60 * 60,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60) + 24,
             iat: Math.floor(Date.now() / 1000)
         },
             "group25")
-        return res.status(200).send({ status: true, message: 'Success', data: encodeToken })
+        return res.status(201).send({ status: true, message: 'Success', data: encodeToken })
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }

@@ -4,7 +4,9 @@ const validator = require('../validator/validator')
 const mongoose = require('mongoose')
 const objectId = mongoose.isValidObjectId
 
-const reviewBook = async function (req, res) {
+//--------------------------|| CREATE REVIEW ||--------------------------------
+
+const createReview = async function (req, res) {
 
     try {
 
@@ -45,6 +47,8 @@ const reviewBook = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
+
+//--------------------------|| UPDATE REVIEW ||--------------------------------
 
 
 const updateReview = async function (req, res) {
@@ -89,6 +93,8 @@ const updateReview = async function (req, res) {
     }
 }
 
+//--------------------------|| DELETE REVIEW ||--------------------------------
+
 const deleteReview = async function (req, res) {
 
     try {
@@ -116,4 +122,4 @@ const deleteReview = async function (req, res) {
 
 
 
-module.exports = { reviewBook, updateReview, deleteReview }
+module.exports = { createReview, updateReview, deleteReview }

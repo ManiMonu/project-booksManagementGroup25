@@ -9,6 +9,7 @@ const reviewSchema = new mongoose.Schema({
     },
     reviewedBy: {
         type: String,
+        trim: true,
         default: 'Guest'
     },
     reviewedAt: {
@@ -20,7 +21,10 @@ const reviewSchema = new mongoose.Schema({
         required: true
     },
 
-    review: String,
+    review: {
+        type: String,
+        trim: true
+    },
 
     isDeleted: {
         type: Boolean,
@@ -28,4 +32,4 @@ const reviewSchema = new mongoose.Schema({
     },
 }, { timestamps: true })
 
-module.exports = new mongoose.model('Review', reviewSchema)
+module.exports = new mongoose.model('review', reviewSchema)
