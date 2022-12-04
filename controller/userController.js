@@ -29,7 +29,7 @@ const createUser = async function (req, res) {
 
 
         if (!validator.validInput(password)) return res.status(400).send({ status: false, message: "Password is not present or valid" })
-        if (!validator.validPassword(password)) return res.status(400).send({ status: false, message: "password should be string, the length should be 8-15 characters" })
+        if (!validator.validPassword(password)) return res.status(400).send({ status: false, message: "Invalid password" })
         if (address) {
             if (address.street) {
                 if (typeof address.street !== 'string' || address.street.trim().length === 0 || !address.street.match(/^[a-zA-Z ]+$/)) return res.status(400).send({ status: false, message: 'Street is not valid' })
