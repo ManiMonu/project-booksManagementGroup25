@@ -53,7 +53,9 @@ const createBook = async function (req, res) {
         if (!validator.validString(subcategory)) return res.status(400).send({ status: false, message: "subcategory is not valid" })
 
         if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt is not present" })
-        // if (!releasedAt.match(dateFormat)) return res.status(400).send({ status: false, message: "Invalid date" })
+        if (!releasedAt.match(dateFormat))
+        
+        return res.status(400).send({ status: false, message: "Invalid format of date :- YYYY-MM-DD" })
         let newData = await bookModel.create(data)
 
         return res.status(201).send({ status: true, message: 'Success', data: newData })
