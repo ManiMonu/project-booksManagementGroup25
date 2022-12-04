@@ -11,7 +11,6 @@ const createReview = async function (req, res) {
     try {
 
         const bookId = req.params.bookId
-        if (!bookId) return res.status(400).send({ status: false, message: 'BookId is required' })
         if (!objectId(bookId)) return res.status(400).send({ status: false, message: 'BookId is invalid' })
         const getBooks = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!getBooks) return res.status(404).send({ status: false, message: 'No books exists' })
@@ -58,12 +57,10 @@ const updateReview = async function (req, res) {
     try {
 
         const bookId = req.params.bookId
-        if (!bookId) return res.status(400).send({ status: false, message: 'BookId is required' })
         if (!objectId(bookId)) return res.status(400).send({ status: false, message: 'BookId is invalid' })
         const getBooks = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ __v: 0, deletedAt: 0 })
         if (!getBooks) return res.status(404).send({ status: false, message: 'No book exists' })
         const reviewId = req.params.reviewId
-        if (!reviewId) return res.status(400).send({ status: false, message: 'ReviewId is required' })
         if (!objectId(reviewId)) return res.status(400).send({ status: false, message: 'reviewId is invalid' })
         const getReview = await reviewModel.findOne({ bookId: getBooks._id, _id: reviewId, isDeleted: false })
         if (!getReview) return res.status(404).send({ status: false, message: 'No review exists' })
@@ -99,12 +96,10 @@ const deleteReview = async function (req, res) {
     try {
 
         const bookId = req.params.bookId
-        if (!bookId) return res.status(400).send({ status: false, message: 'BookId is required' })
         if (!objectId(bookId)) return res.status(400).send({ status: false, message: 'BookId is invalid' })
         const getBooks = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!getBooks) return res.status(404).send({ status: false, message: 'No book exists' })
         const reviewId = req.params.reviewId
-        if (!reviewId) return res.status(400).send({ status: false, message: 'ReviewId is required' })
         if (!objectId(reviewId)) return res.status(400).send({ status: false, message: 'reviewId is invalid' })
         const getReview = await reviewModel.findOne({ bookId: getBooks._id, _id: reviewId, isDeleted: false })
         if (!getReview) return res.status(404).send({ status: false, message: 'No review exists' })

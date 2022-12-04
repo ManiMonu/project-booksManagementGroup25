@@ -4,7 +4,6 @@ const reviewModel = require("../model/reviewModel");
 const userModel = require("../model/userModel")
 const objectId = mongoose.isValidObjectId
 const validator = require('../validator/validator')
-// const dateFormat = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
 const dateFormat = /^((?:19|20)[0-9][0-9])-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/
 
 
@@ -54,8 +53,8 @@ const createBook = async function (req, res) {
 
         if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt is not present" })
         if (!releasedAt.match(dateFormat))
-        
-        return res.status(400).send({ status: false, message: "Invalid format of date :- YYYY-MM-DD" })
+
+            return res.status(400).send({ status: false, message: "Invalid format of date :- YYYY-MM-DD" })
         let newData = await bookModel.create(data)
 
         return res.status(201).send({ status: true, message: 'Success', data: newData })
@@ -113,18 +112,15 @@ const getBooks = async function (req, res) {
 const getBooksById = async function (req, res) {
     try {
         let bookId = req.params.bookId
-        // if (!bookId) {
-        //     return res.status(400).send({ status: false, message: "BookId is required" })
-        // }
         if (!objectId(bookId)) {
             return res.status(400).send({ status: false, message: "BookId is invalid" })
         }
-        let savedData = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ISBN: 0, deletedAt: 0, __v: 0})
+        let savedData = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ ISBN: 0, deletedAt: 0, __v: 0 })
         if (!savedData) {
             return res.status(404).send({ status: false, message: 'No books found' })
         }
 
-        let reviewData = await reviewModel.find({ bookId: savedData._id, isDeleted: false }).select({createdAt: 0, updatedAt: 0, deletedAt: 0, __v: 0})
+        let reviewData = await reviewModel.find({ bookId: savedData._id, isDeleted: false }).select({ createdAt: 0, updatedAt: 0, deletedAt: 0, __v: 0 })
 
         let obj = JSON.parse(JSON.stringify(savedData))
         obj.reviewsData = reviewData
@@ -152,7 +148,7 @@ const updateBook = async function (req, res) {
             }
         }
         if (title) {
-           if (!validator.validInput(title)) return res.status(400).send({ status: false, message: 'Title must be a string' })
+            if (!validator.validInput(title)) return res.status(400).send({ status: false, message: 'Title must be a string' })
             if (!validator.validString(title)) return res.status(400).send({ status: false, message: 'Title is invalid' })
         }
         let checkTitle = await bookModel.findOne({ title: title })
@@ -171,7 +167,7 @@ const updateBook = async function (req, res) {
 
         let bookupdate = await bookModel.findByIdAndUpdate({ _id: bookId },
             { $set: { title: title, excerpt: excerpt, ISBN: ISBN, releasedAt: releasedAt } },
-            { new: true }).select({deletedAt: 0, __v: 0});
+            { new: true }).select({ deletedAt: 0, __v: 0 });
 
         return res.status(200).send({ status: true, message: 'Success', data: bookupdate });
 

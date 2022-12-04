@@ -25,9 +25,9 @@ router.put("/books/:bookId/review/:reviewId", reviewController.updateReview)
 
 router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReview)
 
-// router.all('/*', function(req, res){
-//     return res.status(400).send({status: false, message: "path not found"})
-// })
+router.all('/*', function(req, res){
+    return res.status(400).send({status: false, message: "path not found"})
+})
 
 
 module.exports = router

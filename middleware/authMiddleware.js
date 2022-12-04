@@ -30,15 +30,13 @@ const authentication = function (req, res, next) {
 
 const authorisationForDeleteAndUpdate = async function (req, res, next) {
     try {
-        const { bookId } = req.params
-        if (!bookId) return res.status(400).send({ status: false, message: "bookId is required" })
         if (!objectId(bookId)) return res.status(400).send({ status: false, message: "bookId is invalid" })
 
         let savedData = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!savedData) return res.status(404).send({ status: false, message: 'No such existing books' })
-        let userToBeMdified = savedData.userId.toString()
+        let userToBeModified = savedData.userId.toString()
         let decodedToken = req.decodedToken
-        if (decodedToken !== userToBeMdified) {
+        if (decodedToken !== userToBeModified) {
             return res.status(403).send({ status: false, message: "You do not have access rights" })
         }
         req.bookId = bookId
