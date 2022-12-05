@@ -30,7 +30,7 @@ const createUser = async function (req, res) {
 
         if (!validator.validInput(password)) return res.status(400).send({ status: false, message: "Password is not present or valid" })
         if (!validator.validPassword(password)) return res.status(400).send({ status: false, message: "Invalid password" })
-        if (address) {
+       if(address) {if (typeof address === {}) {
             if (address.street) {
                 if (typeof address.street !== 'string' || address.street.trim().length === 0 || !address.street.match(/^[a-zA-Z ]+$/)) return res.status(400).send({ status: false, message: 'Street is not valid' })
             }
@@ -40,7 +40,7 @@ const createUser = async function (req, res) {
             if (address.pincode) {
                 if (typeof address.pincode !== 'string' || address.pincode.trim().length === 0 || !address.pincode.match(/^[\d]{6}$/)) return res.status(400).send({ status: false, message: 'Pincode is not valid' })
             }
-        }
+        } else {return res.status(400).send({status: false, message: 'Address should be an object'})}}
 
         let newData = await userModel.create(data)
         return res.status(201).send({ status: true, message: 'Success', data: newData })
