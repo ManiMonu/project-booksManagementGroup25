@@ -112,6 +112,7 @@ const getBooks = async function (req, res) {
 const getBooksById = async function (req, res) {
     try {
         let bookId = req.params.bookId
+        if(bookId){
         if (!objectId(bookId)) {
             return res.status(400).send({ status: false, message: "BookId is invalid" })
         }
@@ -124,8 +125,9 @@ const getBooksById = async function (req, res) {
 
         let obj = JSON.parse(JSON.stringify(savedData))
         obj.reviewsData = reviewData
-        return res.status(200).send({ status: true, message: 'Books list', data: obj })
-
+         return res.status(200).send({ status: true, message: 'Books list', data: obj })
+}  else{
+    return res.status(400).send({ status: false, message: "BookId is required" })}
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }

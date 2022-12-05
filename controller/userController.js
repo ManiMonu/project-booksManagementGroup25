@@ -79,7 +79,7 @@ const loginUser = async function (req, res) {
         //--------create token ----------------------------------------------------------------------------------------------------------------
         let encodeToken = jwt.sign({
             userId: savedData._id,
-            exp: Math.floor(Date.now() / 1000) + (60 * 60 + 24),
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
             iat: Math.floor(Date.now() / 1000)
         },
             "group25")
