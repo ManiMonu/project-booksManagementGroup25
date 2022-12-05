@@ -30,6 +30,7 @@ const authentication = function (req, res, next) {
 
 const authorisationForDeleteAndUpdate = async function (req, res, next) {
     try {
+        const bookId = req.params.bookId
         if (!objectId(bookId)) return res.status(400).send({ status: false, message: "bookId is invalid" })
 
         let savedData = await bookModel.findOne({ _id: bookId, isDeleted: false })
