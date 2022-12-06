@@ -24,6 +24,7 @@ const bookSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    bookCover: String,
     category: {
         type: String,
         required: true,
