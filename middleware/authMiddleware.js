@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const objectId = mongoose.isValidObjectId
 const bookModel = require("../model/bookModel")
-const validator = require('../validator/validator')
 
 
 
@@ -46,10 +45,6 @@ const authorisationForDeleteAndUpdate = async function (req, res, next) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
-
-
-
-
 
 
 

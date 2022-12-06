@@ -9,6 +9,12 @@ const validInput = function(value){
     return true
 }
 
+const validObject = function(value){
+     if(typeof value !== 'object') return false
+     if(!Object.keys(value).length > 0) return false
+     return true
+ }
+
 const validNumber = function(value){
     if(typeof value === 'undefined' || value === null) return false
     if(typeof value !== "number") return false
@@ -35,4 +41,4 @@ const validISBN = function(value){
     return value.match(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
 }
 
-module.exports = { requiredInput, validInput, validString, validEmail, validPassword, validPhone, validISBN, validNumber }
+module.exports = { requiredInput, validInput, validString, validEmail, validPassword, validPhone, validISBN, validNumber, validObject }

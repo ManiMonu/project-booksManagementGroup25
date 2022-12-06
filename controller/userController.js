@@ -30,17 +30,18 @@ const createUser = async function (req, res) {
 
         if (!validator.validInput(password)) return res.status(400).send({ status: false, message: "Password is not present or valid" })
         if (!validator.validPassword(password)) return res.status(400).send({ status: false, message: "Invalid password" })
-       if(address) {if (typeof address === {}) {
-            if (address.street) {
-                if (typeof address.street !== 'string' || address.street.trim().length === 0 || !address.street.match(/^[a-zA-Z ]+$/)) return res.status(400).send({ status: false, message: 'Street is not valid' })
+        if(address){
+        const {street, city, pincode} = address
+            if(!validator.validObject(address)){return res.status(400).send({status: false, message: 'Address should be in object format or a valid one'})}
+            else{if (street) {
+                if (typeof street !== 'string' || street.trim().length === 0 || !address.street.match(/^[a-zA-Z ]+$/)) return res.status(400).send({ status: false, message: 'Street is not valid' })
             }
-            if (address.city) {
-                if (typeof address.city !== 'string' || address.city.trim().length === 0 || !address.city.match(/^[a-zA-Z ]+$/)) return res.status(400).send({ status: false, message: 'City is not valid' })
+            if (city) {
+                if (typeof city !== 'string' || city.trim().length === 0 || !address.city.match(/^[a-zA-Z ]+$/)) return res.status(400).send({ status: false, message: 'City is not valid' })
             }
-            if (address.pincode) {
-                if (typeof address.pincode !== 'string' || address.pincode.trim().length === 0 || !address.pincode.match(/^[\d]{6}$/)) return res.status(400).send({ status: false, message: 'Pincode is not valid' })
-            }
-        } else {return res.status(400).send({status: false, message: 'Address should be an object'})}}
+            if (pincode) {
+                if (typeof pincode !== 'string' || pincode.trim().length === 0 || !pincode.match(/^[\d]{6}$/)) return res.status(400).send({ status: false, message: 'Pincode is not valid' })
+            }}}
 
         let newData = await userModel.create(data)
         return res.status(201).send({ status: true, message: 'Success', data: newData })
@@ -66,14 +67,13 @@ const loginUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "email is not present or valid" })
         };
 
-
         if (!validator.validInput(password)) {
             return res.status(400).send({ status: false, message: "password is not present or valid" })
         };
 
         let savedData = await userModel.findOne({ email, password })
         if (!savedData) {
-            return res.status(404).send({ status: false, message: "No such data" })
+            return res.status(401).send({ status: false, message: "No such data" })
         };
 
         //--------create token ----------------------------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ const loginUser = async function (req, res) {
             iat: Math.floor(Date.now() / 1000)
         },
             "group25")
-        return res.status(201).send({ status: true, message: 'Success', data: encodeToken })
+        return res.status(200).send({ status: true, message: 'Success', data: encodeToken })
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
