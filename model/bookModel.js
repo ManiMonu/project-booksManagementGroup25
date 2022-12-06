@@ -24,7 +24,10 @@ const bookSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    bookCover: String,
+    bookCover: {
+        type: String,
+        required: true
+    },
     category: {
         type: String,
         required: true,

@@ -4,6 +4,7 @@ const reviewModel = require("../model/reviewModel");
 const userModel = require("../model/userModel")
 const objectId = mongoose.isValidObjectId
 const validator = require('../validator/validator')
+const axios = require('axios')
 const dateFormat = /^((?:19|20)[0-9][0-9])-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/
 
 
@@ -13,7 +14,7 @@ const createBook = async function (req, res) {
     try {
         const decodedToken = req.decodedToken
         let data = req.body
-        let { title, excerpt, ISBN, category, subcategory, releasedAt, userId } = data;
+        let { title, excerpt, ISBN, category, subcategory, releasedAt, userId, bookCover } = data;
         if (!validator.requiredInput(data)) return res.status(400).send({ status: false, message: 'Input is required' })
 
 
@@ -52,9 +53,19 @@ const createBook = async function (req, res) {
         if (!validator.validString(subcategory)) return res.status(400).send({ status: false, message: "subcategory is not valid" })
 
         if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt is not present" })
-        if (!releasedAt.match(dateFormat))
+        if (!releasedAt.match(dateFormat)) return res.status(400).send({ status: false, message: "Invalid format of date :- YYYY-MM-DD" })
 
-            return res.status(400).send({ status: false, message: "Invalid format of date :- YYYY-MM-DD" })
+        if (!validator.validInput(bookCover)) return res.status(400).send({ status: false, message: "bookCover is not present or valid" })
+
+        //validation for url
+      let correctLink
+      await axios.get(bookCover)
+         .then(() => { correctLink = true })
+         .catch(() => { correctLink = false })
+      if (correctLink === false) {
+         return res.status(400).send({ status: false, message: "URL is wrong" })
+      }
+
         let newData = await bookModel.create(data)
 
         return res.status(201).send({ status: true, message: 'Success', data: newData })
